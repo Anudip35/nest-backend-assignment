@@ -3,24 +3,41 @@ import axios from 'axios';
 
 @Injectable()
 export class FxRatesService {
-  private fxRates: { [key: string]: number } = {};
+  private fxRates: { [key: string]: {rate: number; timestamp: string} } = {};
+  private readonly EXPIRATION_TIME = 30 * 1000;
+  private readonly API='RRD08OVEDV37N30P';
 
-  async fetchFxRates(): Promise<void> {
+  async fetchFxRates(fromCurrency?: string, toCurrency?: string): Promise<number> {
     try {
+      if (!fromCurrency || !toCurrency) {
+        fromCurrency = 'USD';
+        toCurrency = 'EUR';
+      }
+
       const response = await axios.get(
-        'https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=USD&to_currency=EUR&apikey=RRD08OVEDV37N30P'
+        `https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=${fromCurrency}&to_currency=${toCurrency}&apikey=${this.API}`
       );
     
       const exchangeRate = response.data['Realtime Currency Exchange Rate']['5. Exchange Rate'];
-      console.log(exchangeRate);
-      this.fxRates['USD-EUR'] = parseFloat(exchangeRate);
+      const timestamp= new Date().toLocaleString();;
+      const key=`${fromCurrency}-${toCurrency}`;
+
+      this.fxRates[key] = { rate: parseFloat(exchangeRate), timestamp };
+      console.log(this.fxRates[key]);
+
+      // setTimeout(() => {
+      //   delete this.fxRates[key];
+      //   console.log(`Expired FX rate for ${key}`);
+      // }, this.EXPIRATION_TIME);
+
+      return exchangeRate;
+
     } catch (error) {
       console.error('Error fetching FX rates:', error);
     }
   }
 
-  getFxRate(fromCurrency: string, toCurrency: string): number {
-    const key = `${fromCurrency}-${toCurrency}`;
-    return this.fxRates[key];
+  getFxRate(): { [key: string]: {rate: number; timestamp: string} }{
+    return this.fxRates;
   }
 }
