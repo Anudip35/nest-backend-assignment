@@ -5,7 +5,7 @@ import axios from 'axios';
 export class FxRatesService {
   private fxRates: { [key: string]: {rate: number; timestamp: string} } = {};
   private readonly EXPIRATION_TIME = 30 * 1000;
-  private readonly API='KP0DTXKM2QO2QW94';
+  private readonly API='RRD08OVEDV37N30P';
 
   async fetchFxRates(fromCurrency?: string, toCurrency?: string): Promise<number> {
     try {
@@ -26,15 +26,11 @@ export class FxRatesService {
       console.log("Fx Rates- ",this.fxRates);
       console.log(this.fxRates[key]);
 
-      // setTimeout(() => {
-      //   delete this.fxRates[key];
-      //   console.log(`Expired FX rate for ${key}`);
-      // }, this.EXPIRATION_TIME);
-
       return exchangeRate;
 
     } catch (error) {
-      console.error('Error fetching FX rates:', error);
+      // console.log('Error fetching FX rates:');
+      throw new Error('Failed to fetch FX rates');
     }
   }
 
