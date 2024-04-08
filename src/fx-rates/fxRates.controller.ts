@@ -1,26 +1,40 @@
 import { Controller, Get, HttpException, HttpStatus } from '@nestjs/common';
 import { FxRatesService } from './fxRates.service';
+import { ApiTags, ApiOperation, ApiOkResponse, ApiInternalServerErrorResponse } from '@nestjs/swagger';
 
+@ApiTags('FX Rate API')
 @Controller('fx-rates')
 export class FxRatesController {
   constructor(private readonly fxRatesService: FxRatesService) {}
 
   @Get()
+  @ApiOperation({ summary: 'FX Rate API', description: 'This API fetches live FX conversion rates from memory stored in STEP 1. The system generates a quoteId and sends it in the response to the client.' })
+  @ApiOkResponse({
+    description: 'FX Rates fetched Successfully!!',
+    schema: {
+      properties: {
+        quoteId: { type: 'string' },
+        expiry_at: { type: 'string' },
+      },
+    },
+  })
+  @ApiInternalServerErrorResponse({ description: 'Failed to fetch FX rates' })
   async getFxRates(): Promise<{ quoteId: string; expiry_at: string }> {
     try {
       const quoteId = Date.now().toString();
       const fxRates = this.fxRatesService.getFxRate(); // Fetch rates from memory
+      console.log("Fx rates- ",fxRates);
 
       if(Object.keys(fxRates).length === 0) {
         throw new HttpException('No FX rates available', HttpStatus.NOT_FOUND);
       }  
-      
+
       const latestTimestamp = Object.values(fxRates).reduce((maxTimestamp, rate) => {
-        return Math.max(maxTimestamp, +rate.timestamp); // Convert timestamp to number using unary plus operator (+)
+        const timestamp = Date.parse(rate.timestamp);
+        return Math.max(maxTimestamp, timestamp); // Convert timestamp to number using unary plus operator (+)
       }, 0);
 
-      const expiryAt = new Date(latestTimestamp + 30 * 1000).toISOString();
-      console.log(fxRates);
+      const expiryAt = new Date(latestTimestamp + 30 * 1000).toLocaleString();
 
       return { quoteId, expiry_at: expiryAt };
     } catch (error) {
