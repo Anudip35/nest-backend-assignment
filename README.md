@@ -1,36 +1,60 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Nest Js Forex Trading System Assignment
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This assignment is a Forex Trading System using Nest.js. It implements several APIs that allow users to top up their account, fetch live FX conversion rates, perform FX conversions, and check the account balances.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Task Description
 
-## Description
+### Step 1
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Your task is to create a FX rate syncing application.
+- The system fetches live FX conversion rates from alphavantage.co and stores them in memory.
+- Each rate is valid for 30 seconds.
+- Your system has to be smart enough to store the most relevant FX rates.
+
+### Step 2
+
+Your task is to implement the following APIs:
+
+1. **Top Up Account API**
+
+   - **Endpoint:** `POST /accounts/topup`
+   - **Request body:** `{ "currency": "USD", "amount": 100 }`
+   - **Description:** This API allows users to top up their account with a specified amount in a given currency.
+
+2. **FX Rate API**
+
+   - **Endpoint:** `GET /fx-rates`
+   - **Description:** This API fetches live FX conversion rates from memory stored in STEP 1.
+   - The system generates a quoteId and sends it in the response to the client.
+   - **Response:** `{ "quoteId": "12345", "expiry_at": "12345"}`
+
+3. **FX Conversion API**
+
+   - **Endpoint:** `POST /fx-conversion`
+   - **Request body:** `{ "quoteId": "12345", "fromCurrency": "USD", "toCurrency": "EUR", "amount": 100 }`
+   - **Description:** This API performs an FX conversion using the provided quoteId and converts the specified amount from one currency to another.
+   - **Response:** `{ "convertedAmount": 90.53, "currency": "EUR"}`
+
+4. **Balance API**
+   - **Endpoint:** `GET /accounts/balance`
+   - **Description:** This API retrieves the balances in all currencies for the user's account.
+   - **Response:** `{ "balances": { "USD": 1000, "EUR": 500, "GBP": 300 } }`
 
 ## Installation
 
 ```bash
 $ npm install
 ```
+
+## Prerequisite
+
+Create a .env file, and add your API key
+
+```bash
+API_KEY=your_api_key_here
+```
+
+### You can also use this API key **RRD08OVEDV37N30P** in the **fxRates.service.ts** file.
 
 ## Running the app
 
@@ -40,9 +64,6 @@ $ npm run start
 
 # watch mode
 $ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
 
 ## Test
@@ -50,24 +71,26 @@ $ npm run start:prod
 ```bash
 # unit tests
 $ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 
-## Support
+## To Access APIs
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Open web browser, and go to **http://localhost:3000/api#** to view Swagger UI and access the APIs
 
-## Stay in touch
+##
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## About the Implementation
 
-## License
+### Both the Step 1 and Step 2 are implemented following the below Guidelines
 
-Nest is [MIT licensed](LICENSE).
+- Used Nest.js to build the backend system.
+- Utilized the Alphavantage API to fetch
+  live FX conversion rates.
+- The system should stores the fetched FX rates for future reference.
+- Ensured proper error handling and validation for API inputs.
+- Implemented the APIs using appropriate Nest.js decorators and modules.
+- Documented the API endpoints and their usage using Swagger
+  (https://swagger.io).
+- Used appropriate design patterns and best practices are implementated.
+- Included a README file with instructions on how to set up and run your application.
+- Added appropriate unit tests for your application.

@@ -1,6 +1,6 @@
 import { Controller, Get, HttpException, HttpStatus } from '@nestjs/common';
 import { FxRatesService } from './fxRates.service';
-import { ApiTags, ApiOperation, ApiOkResponse, ApiInternalServerErrorResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiOkResponse, ApiInternalServerErrorResponse, ApiBadRequestResponse } from '@nestjs/swagger';
 
 @ApiTags('FX Rate API')
 @Controller('fx-rates')
@@ -18,6 +18,7 @@ export class FxRatesController {
       },
     },
   })
+  @ApiBadRequestResponse({ description: 'Failed to Fetch FX rates due to API limits reached!' })
   @ApiInternalServerErrorResponse({ description: 'Failed to fetch FX rates' })
   async getFxRates(): Promise<{ quoteId: string; expiry_at: string }> {
     try {
@@ -31,7 +32,7 @@ export class FxRatesController {
 
       const latestTimestamp = Object.values(fxRates).reduce((maxTimestamp, rate) => {
         const timestamp = Date.parse(rate.timestamp);
-        return Math.max(maxTimestamp, timestamp); // Convert timestamp to number using unary plus operator (+)
+        return Math.max(maxTimestamp, timestamp);
       }, 0);
 
       const expiryAt = new Date(latestTimestamp + 30 * 1000).toLocaleString();

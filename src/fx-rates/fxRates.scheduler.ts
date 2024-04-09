@@ -11,6 +11,11 @@ export class FxRatesScheduler {
   @Cron(CronExpression.EVERY_30_SECONDS)
   handleCron() {
     this.logger.debug('Fetching FX rates...');
-    this.fxRatesService.fetchFxRates();
+    this.fxRatesService.fetchFxRates('USD', 'GBP');
+    this.fxRatesService.fetchFxRates('EUR', 'GBP');
+    this.fxRatesService.fetchFxRates('EUR', 'USD');
+    this.fxRatesService.fetchFxRates('GBP', 'USD');
+    this.fxRatesService.fetchFxRates('GBP', 'EUR');
+    this.fxRatesService.fetchFxRates('USD', 'EUR');
   }
 }
