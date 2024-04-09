@@ -9,7 +9,7 @@ export class FxRatesScheduler {
   constructor(private readonly fxRatesService: FxRatesService) {}
 
   @Cron(CronExpression.EVERY_30_SECONDS)
-  handleCron() {
+  async handleCron() {
     this.logger.debug('Fetching FX rates...');
     this.fxRatesService.fetchFxRates('USD', 'GBP');
     this.fxRatesService.fetchFxRates('EUR', 'GBP');

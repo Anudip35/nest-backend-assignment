@@ -14,6 +14,7 @@ describe('FxConversionService', () => {
           provide: FxRatesService,
           useValue: {
             fetchFxRates: jest.fn(),
+            getFxRate: jest.fn(),
           },
         },
       ],
@@ -29,14 +30,15 @@ describe('FxConversionService', () => {
 
   describe('convert', () => {
     it('should convert currency successfully', async () => {
-      const quoteId = '123';
+      const quoteId = 'USDEUR';
       const fromCurrency = 'USD';
       const toCurrency = 'EUR';
       const amount = 100;
-      const exchangeRate = 0.9;
-      const expectedConvertedAmount = amount * exchangeRate;
+      const exchangeRate = { rate: 0.9, timestamp: '9/4/2024, 11:23:07 pm' };
+      const expectedConvertedAmount = amount * exchangeRate.rate;
 
       jest.spyOn(fxRatesService, 'fetchFxRates').mockResolvedValue(exchangeRate);
+      jest.spyOn(fxRatesService, 'getFxRate').mockReturnValue(exchangeRate);
 
       const convertedAmount = await service.convert(quoteId, fromCurrency, toCurrency, amount);
 
@@ -44,7 +46,7 @@ describe('FxConversionService', () => {
     });
 
     it('should throw an error when conversion fails', async () => {
-      const quoteId = '123';
+      const quoteId = 'USDEUR';
       const fromCurrency = 'USD';
       const toCurrency = '9898';
       const amount = 100;

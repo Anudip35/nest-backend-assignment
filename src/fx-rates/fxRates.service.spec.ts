@@ -33,7 +33,7 @@ describe('FxRatesService', () => {
 
       await service.fetchFxRates(fromCurrency, toCurrency);
 
-      expect(service.getFxRate()).toEqual({ 'USD-EUR': { rate: 0.9, timestamp: expect.any(String) } });
+      expect(service.getFxRate(`${fromCurrency}${toCurrency}`)).toEqual({ rate: 0.9, timestamp: expect.any(String) });
     });
 
     it('should throw error when Incorrect api call', async () => {

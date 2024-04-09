@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { FxRatesScheduler } from './fxRates.scheduler';
 import { FxRatesService } from './fxRates.service';
+import { Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 
 describe('FxRatesScheduler', () => {
@@ -8,7 +9,7 @@ describe('FxRatesScheduler', () => {
   let fxRatesService: FxRatesService;
 
   beforeEach(async () => {
-    jest.useFakeTimers(); // Use fake timers to control time-related functions
+    jest.useFakeTimers();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [FxRatesScheduler, FxRatesService],
@@ -19,11 +20,11 @@ describe('FxRatesScheduler', () => {
   });
 
   afterEach(() => {
-    jest.clearAllTimers(); // Clear all timers after each test
+    jest.clearAllTimers();
   });
 
   afterAll(() => {
-    jest.useRealTimers(); // Restore real timers after all tests are done
+    jest.useRealTimers();
   });
 
   it('should be defined', () => {
@@ -32,27 +33,26 @@ describe('FxRatesScheduler', () => {
 
   describe('handleCron', () => {
     it('should fetch FX rates from the service', () => {
-      const fetchFxRatesSpy = jest.spyOn(fxRatesService, 'fetchFxRates').mockImplementation();
+      const fetchFxRatesSpy = jest.spyOn(fxRatesService, 'fetchFxRates').mockResolvedValue({});
 
       scheduler.handleCron();
 
-      expect(fetchFxRatesSpy).toHaveBeenCalled();
+      expect(fetchFxRatesSpy).toHaveBeenCalledTimes(6);
     });
 
     it('should log a debug message', () => {
       const loggerSpy = jest.spyOn(scheduler['logger'], 'debug').mockImplementation();
 
       scheduler.handleCron();
-      
+
       expect(loggerSpy).toHaveBeenCalledWith('Fetching FX rates...');
     });
 
     it('should call fetchFxRates for each currency pair', () => {
-      const fetchFxRatesSpy = jest.spyOn(fxRatesService, 'fetchFxRates').mockImplementation();
+      const fetchFxRatesSpy = jest.spyOn(fxRatesService, 'fetchFxRates').mockResolvedValue({});
 
       scheduler.handleCron();
-      
-      // Ensure that fetchFxRates is called for each currency pair
+
       expect(fetchFxRatesSpy).toHaveBeenCalledWith('USD', 'GBP');
       expect(fetchFxRatesSpy).toHaveBeenCalledWith('EUR', 'GBP');
       expect(fetchFxRatesSpy).toHaveBeenCalledWith('EUR', 'USD');

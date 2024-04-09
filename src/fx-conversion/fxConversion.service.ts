@@ -7,8 +7,10 @@ export class FxConversionService {
 
   async convert(quoteId: string, fromCurrency: string, toCurrency: string, amount: number): Promise<number> {
     try {
-      const exchangeRate = await this.fxRatesService.fetchFxRates(fromCurrency, toCurrency);
-      const convertedAmount = amount * exchangeRate;
+      await this.fxRatesService.fetchFxRates(fromCurrency, toCurrency);
+      const fxRate = this.fxRatesService.getFxRate(quoteId);
+      console.log("Fxconversion.service calling- ", fxRate);
+      const convertedAmount = amount * fxRate.rate;
       
       return convertedAmount;
     } catch (error) {

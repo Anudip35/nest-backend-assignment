@@ -22,20 +22,22 @@ export class FxRatesController {
   @ApiInternalServerErrorResponse({ description: 'Failed to fetch FX rates' })
   async getFxRates(): Promise<{ quoteId: string; expiry_at: string }> {
     try {
-      const quoteId = Date.now().toString();
-      const fxRates = this.fxRatesService.getFxRate(); // Fetch rates from memory
-      console.log("Fx rates- ",fxRates);
+      const fxRates = await this.fxRatesService.fetchFxRates();
+      console.log("fxRates.controller calling- ",fxRates);
 
       if(Object.keys(fxRates).length === 0) {
         throw new HttpException('No FX rates available', HttpStatus.NOT_FOUND);
       }  
 
-      const latestTimestamp = Object.values(fxRates).reduce((maxTimestamp, rate) => {
-        const timestamp = Date.parse(rate.timestamp);
-        return Math.max(maxTimestamp, timestamp);
-      }, 0);
+      const latestQuoteId = Object.keys(fxRates).reduce((latestId, currentId) => {
+        const currentTimestamp = Date.parse(fxRates[currentId].timestamp);
+        const latestTimestamp = Date.parse(fxRates[latestId].timestamp);
+        return currentTimestamp > latestTimestamp ? currentId : latestId;
+      });
+  
 
-      const expiryAt = new Date(latestTimestamp + 30 * 1000).toLocaleString();
+      const quoteId = latestQuoteId;
+      const expiryAt = fxRates[latestQuoteId].timestamp;
 
       return { quoteId, expiry_at: expiryAt };
     } catch (error) {

@@ -26,7 +26,7 @@ describe('FxConversionController', () => {
   describe('convert', () => {
     it('should convert currency successfully', async () => {
       const dto: FxConversionDto = {
-        quoteId: '123',
+        quoteId: 'USDEUR',
         fromCurrency: 'USD',
         toCurrency: 'EUR',
         amount: 100,
@@ -43,7 +43,7 @@ describe('FxConversionController', () => {
 
     it('should throw internal server error when conversion fails', async () => {
       const dto: FxConversionDto = {
-        quoteId: '123',
+        quoteId: 'USDEUR',
         fromCurrency: 'USD',
         toCurrency: 'EUR',
         amount: 100,
