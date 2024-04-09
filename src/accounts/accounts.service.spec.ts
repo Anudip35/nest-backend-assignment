@@ -22,7 +22,6 @@ describe('AccountsService', () => {
       const amount = 100;
       service.topUpAccount(currency, amount);
       const balances = service.getBalance();
-      console.log(balances);
 
       expect(balances.balances[currency]).toEqual(amount);
     });

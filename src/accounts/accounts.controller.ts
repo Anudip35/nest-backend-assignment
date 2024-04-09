@@ -1,5 +1,5 @@
 import { Controller, Post, Body, Get, HttpException, HttpStatus, UsePipes, ValidationPipe } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiOkResponse, ApiBadRequestResponse, ApiInternalServerErrorResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiOkResponse, ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiResponse } from '@nestjs/swagger';
 import { AccountsService } from './accounts.service';
 import { Account } from './account.dto';
 
@@ -10,8 +10,8 @@ export class AccountsController {
 
   @Post('topup')
   @ApiOperation({ summary: 'Top Up Account API', description: 'This API allows users to top up their account with a specified amount in a given currency.'})
-  @ApiOkResponse({
-    description: 'Account topped up Successfully!!',
+  @ApiResponse({ status: 201, 
+    description: 'Account topped up successfully', 
     schema: {
       properties: {
         currency: { type: 'string' },

@@ -39,13 +39,11 @@ export class FxRatesService {
 
       setTimeout(() => {
         delete this.fxRates[cacheKey];
-        // console.log(`Expired FX rate for ${cacheKey}`);
       }, this.EXPIRATION_TIME);
 
       return this.fxRates;
 
     } catch (error) {
-      // console.error("Failed to fetch rates");
       throw new Error('Failed to fetch FX rates');
     }
   }

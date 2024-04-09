@@ -25,7 +25,6 @@ export class RateLimitMiddleware implements NestMiddleware {
       next();
     } catch (error) {
         console.error('Error in rate limiting middleware:', error);
-        // throw new HttpException('Error in Rate Limiting', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }
