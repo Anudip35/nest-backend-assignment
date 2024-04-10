@@ -1,7 +1,8 @@
-import { Controller, Post, Body, HttpException, HttpStatus, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Post, Body, HttpException, HttpStatus, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
 import { FxConversionDto } from './fxConversion.dto';
 import { FxConversionService } from './fxConversion.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiInternalServerErrorResponse, ApiBadRequestResponse } from '@nestjs/swagger';
+import { FirebaseAuthGuard } from '../firebase-guard';
 
 @ApiTags('FX Conversion')
 @Controller('fx-conversion')
@@ -9,6 +10,8 @@ export class FxConversionController {
   constructor(private readonly fxConversionService: FxConversionService) {}
 
   @Post()
+  @UseGuards(FirebaseAuthGuard)
+  @ApiResponse({ status: 403, description: 'Unauthorized Access. Please Login or SignIn' })
   @ApiOperation({ summary: 'FX Conversion API', description: 'This API performs an FX conversion using the provided quoteId and converts the specified amount from one currency to another.' })
   @ApiResponse({ status: 201, 
     description: 'FX Conversion Successfull', 

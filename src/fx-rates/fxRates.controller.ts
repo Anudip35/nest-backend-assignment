@@ -1,6 +1,7 @@
-import { Controller, Get, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { FxRatesService } from './fxRates.service';
-import { ApiTags, ApiOperation, ApiOkResponse, ApiInternalServerErrorResponse, ApiBadRequestResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiOkResponse, ApiInternalServerErrorResponse, ApiBadRequestResponse, ApiResponse } from '@nestjs/swagger';
+import { FirebaseAuthGuard } from '../firebase-guard';
 
 @ApiTags('FX Rate API')
 @Controller('fx-rates')
@@ -8,6 +9,8 @@ export class FxRatesController {
   constructor(private readonly fxRatesService: FxRatesService) {}
 
   @Get()
+  @UseGuards(FirebaseAuthGuard)
+  @ApiResponse({ status: 403, description: 'Unauthorized Access. Please Login or SignIn' })
   @ApiOperation({ summary: 'FX Rate API', description: 'This API fetches live FX conversion rates from memory stored in STEP 1. The system generates a quoteId and sends it in the response to the client.' })
   @ApiOkResponse({
     description: 'FX Rates fetched Successfully!!',
