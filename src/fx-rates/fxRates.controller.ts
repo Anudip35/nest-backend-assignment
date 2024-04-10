@@ -35,9 +35,9 @@ export class FxRatesController {
         return currentTimestamp > latestTimestamp ? currentId : latestId;
       });
   
-
+      const expiryTimestamp = new Date(fxRates[latestQuoteId].timestamp).getTime() + 30 * 1000;
       const quoteId = latestQuoteId;
-      const expiryAt = fxRates[latestQuoteId].timestamp;
+      const expiryAt = new Date(expiryTimestamp).toLocaleString();
 
       return { quoteId, expiry_at: expiryAt };
     } catch (error) {

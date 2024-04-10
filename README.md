@@ -54,7 +54,7 @@ Create a .env file, and add your API key
 API_KEY=your_api_key_here
 ```
 
-### You can also use this API key **RRD08OVEDV37N30P** in the **fxRates.service.ts** file.
+### You can get your API key from https://www.alphavantage.co/support/#api-key OR you can also use this API key **RRD08OVEDV37N30P** in the **fxRates.service.ts** file.
 
 ## Running the app
 
