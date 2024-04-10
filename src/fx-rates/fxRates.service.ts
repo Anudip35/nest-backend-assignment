@@ -15,21 +15,19 @@ export class FxRatesService {
 
       const cacheKey = `${fromCurrency}${toCurrency}`;
 
-      // // Check if the exchange rate is cached
-      // if (cacheKey in this.fxRates) {
-      //   const cachedRate = this.fxRates[cacheKey];
-      //   const currentTime = new Date().getTime();
-      //   const cachedTime = new Date(cachedRate.timestamp).getTime();
-      //   const expiryTime = cachedTime + 24 * 1000;
-      //   console.log("Current Time: ", new Date().toLocaleString());
-      //   console.log("Cached Time: ", new Date(cachedRate.timestamp).toLocaleString());
-      //   console.log("Expiry Time: ", new Date(expiryTime).toLocaleString());
+      // Check if the exchange rate is cached
+      if (cacheKey in this.fxRates) {
+        const cachedRate = this.fxRates[cacheKey];
+        const currentTime = new Date().getTime();
+        const cachedRateTimestamp = cachedRate.timestamp.split('/');
+        const cachedTime = new Date(`${cachedRateTimestamp[1]}/${cachedRateTimestamp[0]}/${cachedRateTimestamp[2]}`).getTime();
+        const expiryTime = cachedTime + 24 * 1000;
 
-      //   if (currentTime > expiryTime) {
-      //     console.log("Caching done...");
-      //     return this.fxRates;
-      //   }
-      // }
+        if (currentTime < expiryTime) {
+          console.log("Caching done....");
+          return this.fxRates;
+        }
+      }
 
       const apiKey = process.env.API_KEY;
       const response = await axios.get(

@@ -61,7 +61,7 @@ export class AccountsController {
   @Post('signup')
   @ApiOperation({ summary: 'User Signup', description: 'Create a new user account' })
   @ApiResponse({ status: 201, description: 'User account created successfully' })
-  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiBadRequestResponse({ description: 'Enter Valid Email and Password' })
   @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
   async signUp(@Body() signUpDto: SignUpDto): Promise<void> {
     const { email, password } = signUpDto;
@@ -75,7 +75,7 @@ export class AccountsController {
   @Post('login')
   @ApiOperation({ summary: 'User Login', description: 'Authenticate user with email and password' })
   @ApiResponse({ status: 201, description: 'User authenticated successfully' })
-  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiBadRequestResponse({ description: 'Enter Valid Email and Password' })
   @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
   async login(@Body() loginDto: LoginDto): Promise<void> {
     const { email, password } = loginDto;
@@ -91,7 +91,7 @@ export class AccountsController {
   @ApiResponse({ status: 403, description: 'Unauthorized Access. Please Login or SignIn' })
   @ApiOperation({ summary: 'User Logout', description: 'Logout user from the system' })
   @ApiResponse({ status: 201, description: 'User logged out successfully' })
-  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiBadRequestResponse({ description: 'Failed to Logout' })
   @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
   async logout(): Promise<void> {
     try {
