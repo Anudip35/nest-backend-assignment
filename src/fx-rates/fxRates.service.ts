@@ -21,7 +21,7 @@ export class FxRatesService {
         const currentTime = new Date().getTime();
         const cachedRateTimestamp = cachedRate.timestamp.split('/');
         const cachedTime = new Date(`${cachedRateTimestamp[1]}/${cachedRateTimestamp[0]}/${cachedRateTimestamp[2]}`).getTime();
-        const expiryTime = cachedTime + 24 * 1000;
+        const expiryTime = cachedTime + 20 * 1000;
 
         if (currentTime < expiryTime) {
           console.log("Caching done....");
@@ -47,6 +47,7 @@ export class FxRatesService {
       return this.fxRates;
 
     } catch (error) {
+      console.log("The API usage limit might have exceeded. Please use another api key.");
       throw new Error('Failed to fetch FX rates');
     }
   }
