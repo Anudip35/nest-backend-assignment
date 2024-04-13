@@ -2,7 +2,7 @@ import { Controller, Post, Body, Get, HttpException, HttpStatus, UsePipes, Valid
 import { ApiTags, ApiOperation, ApiOkResponse, ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiResponse } from '@nestjs/swagger';
 import { AccountsService } from './accounts.service';
 import { Account } from './account.dto';
-import { LoginDto, SignUpDto } from 'src/auth.dto';
+import { LoginDto, SignUpDto } from '../auth.dto';
 import {FirebaseAuthGuard} from '../firebase-guard';
 import { UseGuards } from '@nestjs/common/decorators';
 
@@ -29,7 +29,7 @@ export class AccountsController {
   @UsePipes(new ValidationPipe({ transform: true }))
   topUpAccount(@Body() account: Account): { message: string } {
     try {
-      this.accountsService.topUpAccount(account.currency, account.amount);
+      AccountsService.topUpAccount(account.currency, account.amount);
       return { message: 'Account topped up successfully' };
     } catch (error) {
       throw new HttpException(error.message || 'Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -52,7 +52,7 @@ export class AccountsController {
   @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
   getBalance(): { balances: { [key: string]: number } } {
     try {
-      return this.accountsService.getBalance();
+      return AccountsService.getBalance();
     } catch (error) {
       throw new HttpException(error.message || 'Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
     }

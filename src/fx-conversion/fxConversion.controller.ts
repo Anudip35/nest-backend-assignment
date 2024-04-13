@@ -28,8 +28,12 @@ export class FxConversionController {
   async convert(@Body() fxConversionDto: FxConversionDto): Promise<{ convertedAmount: number, currency: string }> {
     const { quoteId, fromCurrency, toCurrency, amount } = fxConversionDto;
 
-    try {
+    try { 
       const convertedAmount = await this.fxConversionService.convert(quoteId, fromCurrency, toCurrency, amount);
+
+      if(convertedAmount === 0) {
+        throw new HttpException('Insufficient balance to perfrom FX conversion', HttpStatus.BAD_REQUEST);
+      }
 
       if(convertedAmount === null || Number.isNaN(convertedAmount)) {
         throw new HttpException('Failed to perform FX conversion', HttpStatus.INTERNAL_SERVER_ERROR);

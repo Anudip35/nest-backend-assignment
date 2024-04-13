@@ -7,18 +7,22 @@ export class AccountsService {
     this.firebaseService.initializeApp();
   }
   
-  private balances = {
+  private static balances = {
     USD: 0,
     EUR: 0,
     GBP: 0,
   };
 
-  topUpAccount(currency: string, amount: number): void {
-    this.balances[currency] += amount;
+  static topUpAccount(currency: string, amount: number): void { // Change method to static
+    AccountsService.balances[currency] += amount;
   }
 
-  getBalance(): { balances: { [key: string]: number } } {
-    return { balances: this.balances };
+  static getBalance(): { balances: { [key: string]: number } } { // Change method to static
+    return { balances: AccountsService.balances };
+  }
+
+  static reduceAmount(fromCurrency: string, amount: number): void { // Change method to static
+    AccountsService.balances[fromCurrency] -= amount;
   }
 
   async signUp(email: string, password: string): Promise<void> {
